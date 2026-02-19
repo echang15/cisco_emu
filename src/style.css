@@ -1,0 +1,64 @@
+:root {
+  --terminal-bg: #000000;
+  --terminal-fg: #00ff00;
+  --terminal-font: 'Courier New', Courier, monospace;
+}
+
+body, html {
+  margin: 0;
+  padding: 0;
+  background-color: var(--terminal-bg);
+  color: var(--terminal-fg);
+  font-family: var(--terminal-font);
+  height: 100%;
+  width: 100%;
+  overflow: hidden;
+}
+
+#terminal {
+  width: 100%;
+  height: 100%;
+  padding: 10px;
+  box-sizing: border-box;
+  overflow-y: auto;
+  white-space: pre-wrap; /* Preserve whitespace but wrap text */
+}
+
+.line {
+  display: block;
+  min-height: 1.2em;
+}
+
+.input-line {
+  display: flex;
+}
+
+.prompt {
+  margin-right: 8px;
+  font-weight: bold;
+}
+
+/* Hidden input that captures keyboard events but isn't seen directly */
+#hidden-input {
+  position: absolute;
+  opacity: 0;
+  top: -1000px;
+}
+
+.cursor {
+  display: inline-block;
+  width: 10px;
+  height: 1.2em;
+  background-color: var(--terminal-fg);
+  animation: blink 1s step-end infinite;
+  vertical-align: text-bottom;
+}
+
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
+}
+
+/* Utility classes for text colors if needed later */
+.error { color: red; }
+.warning { color: yellow; }

@@ -28,6 +28,11 @@ export class VlanDatabase {
         return this.vlans.get(parseInt(id));
     }
 
+    removeVlan(id) {
+        const vlanId = parseInt(id);
+        return this.vlans.delete(vlanId);
+    }
+
     getAllVlans() {
         return Array.from(this.vlans.values()).sort((a, b) => a.id - b.id);
     }

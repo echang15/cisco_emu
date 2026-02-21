@@ -39,6 +39,15 @@ export class InterfaceDatabase {
         }
     }
 
+    resetVlan(vlanId) {
+        const id = parseInt(vlanId);
+        for (const [name, iface] of this.interfaces) {
+            if (iface.accessVlan === id) {
+                iface.setAccessVlan(1);
+            }
+        }
+    }
+
     getInterface(name) {
         // Handle common abbreviations
         // Gi1/1 -> GigabitEthernet1/1

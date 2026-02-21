@@ -114,4 +114,32 @@ export class Terminal {
     scrollToBottom() {
         this.container.scrollTop = this.container.scrollHeight;
     }
+
+    clear() {
+        // Remove all content and recreate the input line
+        while (this.container.firstChild) {
+            this.container.removeChild(this.container.firstChild);
+        }
+
+        this.inputLineContainer = document.createElement('div');
+        this.inputLineContainer.className = 'input-line';
+        this.container.appendChild(this.inputLineContainer);
+
+        this.promptElem = document.createElement('span');
+        this.promptElem.className = 'prompt';
+        this.promptElem.textContent = this.promptText;
+        this.inputLineContainer.appendChild(this.promptElem);
+
+        this.inputContentElem = document.createElement('span');
+        this.inputLineContainer.appendChild(this.inputContentElem);
+
+        this.cursorElem = document.createElement('span');
+        this.cursorElem.className = 'cursor';
+        this.cursorElem.innerHTML = "&nbsp;";
+        this.inputLineContainer.appendChild(this.cursorElem);
+
+        this.currentInput = "";
+        this.renderInput();
+        this.scrollToBottom();
+    }
 }

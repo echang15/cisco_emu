@@ -83,6 +83,10 @@ export class IOSSystem {
     }
 
     handleExec(cmd, tokens) {
+        if (cmd === 'clear') {
+            this.terminal.clear();
+            return;
+        }
         if (cmd === 'enable' || cmd === 'en') {
             this.mode = MOES.PRIVILEGED;
         } else if (cmd === 'exit' || cmd === 'logout') {
@@ -95,6 +99,10 @@ export class IOSSystem {
     }
 
     handlePrivileged(cmd, tokens) {
+        if (cmd === 'clear') {
+            this.terminal.clear();
+            return;
+        }
         if (cmd === 'configure' || cmd === 'conf') {
             if (tokens[1] && (tokens[1].startsWith('t'))) {
                 this.terminal.print("Enter configuration commands, one per line.  End with CNTL/Z.");
@@ -118,6 +126,20 @@ export class IOSSystem {
             this.mode = MOES.PRIVILEGED;
         } else if (cmd === 'end') {
             this.mode = MOES.PRIVILEGED;
+        } else if (cmd === 'no' && tokens[1] === 'vlan') {
+            if (!tokens[2]) {
+                this.terminal.print("% Incomplete command.");
+                return;
+            }
+            const vlanId = parseInt(tokens[2]);
+            if (this.vlanDb.getVlan(vlanId)) {
+                this.vlanDb.removeVlan(vlanId);
+                // Reset any interfaces that referenced this VLAN back to VLAN 1
+                this.interfaceDb.resetVlan(vlanId);
+                this.terminal.print(`All interfaces in VLAN ${vlanId} reverted to VLAN 1.`);
+            } else {
+                this.terminal.print("% VLAN does not exist.");
+            }
         } else if (cmd === 'interface' || cmd === 'int') {
             if (!tokens[1]) {
                 this.terminal.print("% Incomplete command.");
@@ -160,6 +182,19 @@ export class IOSSystem {
         } else if (cmd === 'end') {
             this.mode = MOES.PRIVILEGED;
             this.configContext = null;
+        } else if (cmd === 'no' && tokens[1] === 'vlan') {
+            if (!tokens[2]) {
+                this.terminal.print("% Incomplete command.");
+                return;
+            }
+            const vlanId = parseInt(tokens[2]);
+            if (this.vlanDb.getVlan(vlanId)) {
+                this.vlanDb.removeVlan(vlanId);
+                this.interfaceDb.resetVlan(vlanId);
+                this.terminal.print(`All interfaces in VLAN ${vlanId} reverted to VLAN 1.`);
+            } else {
+                this.terminal.print("% VLAN does not exist.");
+            }
         } else if (cmd === 'switchport') {
             this.handleSwitchport(tokens);
         } else if (cmd === 'shutdown') {
